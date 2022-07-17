@@ -35,10 +35,9 @@ int FirstValueEqualToIndex(const std::vector<int>& intVec)
     // Perform an O(log n) binary search
     // start = left boundary, middle = middle of array, end = right boundary
     int start = 0;
-    int middle = 0;
     while (start != end) {
         // The array is cut in half on each loop
-        middle = (start + end) / 2;
+        const int middle = (start + end) / 2;
         if (intVec.at(middle) < middle) {
             // Answer must be in right half
             start = middle + 1;
