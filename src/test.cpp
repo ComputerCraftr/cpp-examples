@@ -44,6 +44,25 @@ std::vector<int> GenerateTestVec()
     return result;
 }
 
+void BenchWithTestVec()
+{
+    constexpr int testDataSize = 1000000;
+    std::vector<std::vector<int>> testData;
+    testData.reserve(testDataSize);
+    for (int i = 0; i < testDataSize; ++i) {
+        testData.push_back(GenerateTestVec());
+    }
+
+    int64_t start = clock();
+
+    for (int i = 0; i < testDataSize; ++i) {
+        FirstValueEqualToIndex(testData.at(i));
+    }
+
+    int64_t end = clock();
+    printf("runtime = %lius\n", (end - start) * 1000000 / CLOCKS_PER_SEC);
+}
+
 int main(int argc, char *argv[])
 {
     const int64_t nTime = time(nullptr);
