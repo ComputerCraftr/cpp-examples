@@ -17,22 +17,18 @@
 // Worst case time complexity: O(log n)
 int FirstValueEqualToIndex(const std::vector<int>& intVec)
 {
-    // No value equal to index
-    if (intVec.empty()) {
-        return -1;
-    }
-
     // One beyond either the last element index or the maximum int value
     const uint64_t size = std::min(static_cast<uint64_t>(intVec.size()), static_cast<uint64_t>(std::numeric_limits<int>::max()) + 1);
     // Either the last element index or the maximum int value because no element can be equal to its index number beyond this point
     int end = size - 1;
 
+    // If the array is empty, then there are no matching values
     // If the last element is less than its index, then every other element must be less than it and therefore will not match
-    if (intVec.at(end) < end) {
+    if (size == 0 || intVec.at(end) < end) {
         return -1;
     }
 
-    // Perform an O(log n) binary search
+    // Perform an O(log n) binary search and find the leftmost matching element
     // start = left boundary, middle = middle of array, end = right boundary
     int start = 0;
     while (start != end) {
