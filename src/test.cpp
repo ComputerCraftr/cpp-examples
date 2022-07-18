@@ -32,9 +32,8 @@ std::vector<int> GenerateTestVec()
     constexpr int range = 100; // Must be at least half of size to produce enough unique values to fill the set
     std::unordered_set<int> data;
 
-    int randTemp = 0;
     while (data.size() < size) {
-        randTemp = rand() % (2 * range + 1) - range; // -range to range
+        const int randTemp = rand() % (2 * range + 1) - range; // -range to range
         data.insert(randTemp); // Every inserted int is unique
     }
 
@@ -49,6 +48,7 @@ void BenchWithTestVec()
     constexpr int testDataSize = 1000000;
     std::vector<std::vector<int>> testData;
     testData.reserve(testDataSize);
+
     for (int i = 0; i < testDataSize; ++i) {
         testData.push_back(GenerateTestVec());
     }
@@ -68,32 +68,11 @@ int main(int argc, char *argv[])
     const int64_t nTime = time(nullptr);
     srand(nTime);
 
-    constexpr int testCases = 18;
+    constexpr int testCases = 2;
     std::vector<int> testVecArr[testCases] = {
-        {},
-        {-3, 0, 2, 34},
-        {1, 7, 9, 13},
-        {0, 1, 2, 3},
-        {-1, 1, 2, 3},
-        {-1, 0, 2, 3},
-        {-1, 0, 1, 3},
-        {-1, 0, 1, 2},
-        {-4, -3, -2, -1},
-        {-4, -3, -2, 0},
-        {-1, 0, 1, 4},
-        {-2, -1, 1, 4},
-        {-30, -12, -11, -4, 7, 8, 37},
-        {-30, -12, -11, -4, 1, 3, 6},
-        {-30, -12, -11, -4, -3, 1, 6, 7},
-        {},
         GenerateTestVec(),
         GenerateTestVec()
     };
-
-    for (int i = 0; i <= std::numeric_limits<int8_t>::max(); ++i) {
-        testVecArr[15].push_back(i - 1);
-    }
-    testVecArr[15].push_back(static_cast<int>(std::numeric_limits<int8_t>::max()) + 1);
 
     for (int i = 0; i < testCases; ++i) {
         printf("FirstValueEqualToIndex %s = %i\n", VecToString(testVecArr[i]).c_str(), FirstValueEqualToIndex(testVecArr[i]));
