@@ -10,16 +10,32 @@
 #include <unordered_set>
 #include <vector>
 
-std::string VecToString(const std::vector<int>& intVec)
+std::string VecToString(const std::vector<int>& vec)
 {
     std::string result = "{";
 
-    if (!intVec.empty()) {
-        const size_t end = intVec.size() - 1;
+    if (!vec.empty()) {
+        const size_t end = vec.size() - 1;
         for (size_t i = 0; i != end; ++i) {
-            result += std::to_string(intVec.at(i)) + ", ";
+            result += std::to_string(vec.at(i)) + ", ";
         }
-        result += std::to_string(intVec.at(end));
+        result += std::to_string(vec.at(end));
+    }
+
+    result += "}";
+    return result;
+}
+
+std::string VecToString(const std::vector<size_t>& vec)
+{
+    std::string result = "{";
+
+    if (!vec.empty()) {
+        const size_t end = vec.size() - 1;
+        for (size_t i = 0; i != end; ++i) {
+            result += std::to_string(vec.at(i)) + ", ";
+        }
+        result += std::to_string(vec.at(end));
     }
 
     result += "}";
@@ -69,7 +85,7 @@ int main(int argc, char *argv[])
     srand(nTime);
 
     constexpr int testCases = 2;
-    std::vector<int> testVecArr[testCases] = {
+    const std::vector<int> testVecArr[testCases] = {
         GenerateTestVec(),
         GenerateTestVec()
     };
@@ -77,4 +93,10 @@ int main(int argc, char *argv[])
     for (int i = 0; i < testCases; ++i) {
         printf("FirstValueEqualToIndex %s = %i\n", VecToString(testVecArr[i]).c_str(), FirstValueEqualToIndex(testVecArr[i]));
     }
+
+    const std::string testStr = "abracadabra";
+    const std::string subStr = "abr";
+
+    const std::vector<size_t> matches = FindSubStrMatches(testStr, subStr);
+    printf("Found substring match at positions = %s\n", VecToString(matches).c_str());
 }
