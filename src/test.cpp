@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <iostream>
 #include <limits>
+#include <list>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -26,16 +27,17 @@ std::string VecToString(const std::vector<int>& vec)
     return result;
 }
 
-std::string VecToString(const std::vector<size_t>& vec)
+std::string LstToString(const std::list<size_t>& lst)
 {
     std::string result = "{";
 
-    if (!vec.empty()) {
-        const size_t end = vec.size() - 1;
-        for (size_t i = 0; i != end; ++i) {
-            result += std::to_string(vec.at(i)) + ", ";
+    if (!lst.empty()) {
+        std::list<size_t>::const_iterator lastElem = lst.cend();
+        --lastElem;
+        for (std::list<size_t>::const_iterator it = lst.cbegin(); it != lastElem; ++it) {
+            result += std::to_string(*it) + ", ";
         }
-        result += std::to_string(vec.at(end));
+        result += std::to_string(lst.back());
     }
 
     result += "}";
@@ -97,6 +99,6 @@ int main(int argc, char *argv[])
     const std::string testStr = "abracadabra";
     const std::string subStr = "abr";
 
-    const std::vector<size_t> matches = FindSubStrMatches(testStr, subStr);
-    printf("Found substring match at positions = %s\n", VecToString(matches).c_str());
+    const std::list<size_t> matches = FindSubStrMatches(testStr, subStr);
+    printf("Found substring match at positions = %s\n", LstToString(matches).c_str());
 }

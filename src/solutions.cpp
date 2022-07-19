@@ -53,15 +53,84 @@ int FirstValueEqualToIndex(const std::vector<int>& intVec)
 }
 
 // Given an input text string and a simple text pattern, find the starting indices of all matches of the pattern in the input text string.
-std::vector<size_t> FindSubStrMatches(const std::string& str, const std::string& subStr)
+//
+// This function uses the KMP algorithm to find all matches for a substring in a given string. Before scanning the string for
+// matches, a partial match table is initialized from the substring so that repeated comparisons can be skipped. The function
+// arguments are passed as const references for space efficiency. A list is returned instead of a vector to avoid potentially
+// time consuming reallocation operations.
+//
+// Worst case time complexity: O(n) in the length of str
+std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& subStr)
 {
-    std::vector<size_t> matchingIndices;
-    size_t pos = str.find(subStr);
+    std::list<size_t> matchingIndices;
 
-    while (pos != std::string::npos) {
-        matchingIndices.push_back(pos);
-        ++pos;
-        pos = str.find(subStr, pos);
+    // Can only work with string lengths up to the maximum int64_t value
+    const int64_t strLen = std::min(static_cast<int64_t>(str.length()), std::numeric_limits<int64_t>::max());
+    const int64_t subStrLen = std::min(static_cast<int64_t>(subStr.length()), std::numeric_limits<int64_t>::max());
+
+    // If either string is empty or subStr is longer than str, then there will be no matches
+    if (strLen == 0 || subStrLen == 0 || subStrLen > strLen) {
+        return matchingIndices;
+    }
+
+    // Keep track of which index we are checking
+    int64_t posStr = 0;
+    int64_t posSubStr = 0;
+    std::vector<int64_t> matchTable;
+
+    // Compute partial match table to optimize searching
+    {
+        // The partial match table must be computed for every character in subStr plus one extra
+        matchTable.reserve(subStrLen + 1);
+
+        // Keep track of how far we have gotten in the table and subStr
+        int64_t posTable = 1;
+        int64_t posSubStrNext = 0;
+
+        // If the first character doesn't match, then no backtracking is possible
+        matchTable.push_back(-1);
+
+        // Fill the rest of the table
+        while (posTable < subStrLen) {
+            if (subStr.at(posTable) == subStr.at(posSubStrNext)) {
+                matchTable.push_back(matchTable.at(posSubStrNext));
+            } else {
+                matchTable.push_back(posSubStrNext);
+                while (posSubStrNext >= 0 && subStr.at(posTable) != subStr.at(posSubStrNext)) {
+                    posSubStrNext = matchTable.at(posSubStrNext);
+                }
+            }
+
+            // Move onto the next character in subStr
+            ++posTable;
+            ++posSubStrNext;
+        }
+
+        matchTable.push_back(posSubStrNext);
+    }
+
+    // Search str for matches
+    while (posStr < strLen) {
+        if (str.at(posStr) == subStr.at(posSubStr)) {
+            // Current character matches, move onto the next
+            ++posStr;
+            ++posSubStr;
+            if (posSubStr == subStrLen) {
+                // Found matching occurrence of subStr
+                // Unlike a vector, adding elements to the end of a linked list is always an O(1) constant time operation
+                matchingIndices.push_back(posStr - posSubStr);
+                // The table cannot return -1 here
+                posSubStr = matchTable.at(posSubStr);
+            }
+        } else {
+            // Current character doesn't match, reset position in subStr based on partial match table
+            posSubStr = matchTable.at(posSubStr);
+            // Conditionally move onto the next character in str
+            if (posSubStr < 0) {
+                ++posStr;
+                ++posSubStr;
+            }
+        }
     }
 
     return matchingIndices;
