@@ -59,7 +59,7 @@ int FirstValueEqualToIndex(const std::vector<int>& intVec)
 // arguments are passed as const references for space efficiency. A list is returned instead of a vector to avoid potentially
 // time consuming reallocation operations.
 //
-// Worst case time complexity: O(n) in the length of str
+// Worst case time complexity: O(n + m) where n is the length of str and m is the length of subStr
 std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& subStr)
 {
     std::list<size_t> matchingIndices;
@@ -78,7 +78,7 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
     int64_t posSubStr = 0;
     std::vector<int64_t> matchTable;
 
-    // Compute partial match table to optimize searching
+    // Compute partial match table to optimize searching - this is a deterministic finite automaton which recognizes subStr
     {
         // The partial match table must be computed for every character in subStr plus one extra
         matchTable.reserve(subStrLen + 1);
@@ -87,7 +87,7 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
         int64_t posTable = 1;
         int64_t posSubStrNext = 0;
 
-        // If the first character doesn't match, then no backtracking is possible
+        // If the first character doesn't match, then we simply move onto the next character in str
         matchTable.push_back(-1);
 
         // Fill the rest of the table
@@ -106,10 +106,11 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
             ++posSubStrNext;
         }
 
+        // The last element is never -1
         matchTable.push_back(posSubStrNext);
     }
 
-    // Search str for matches
+    // Search str for matches - instead of rechecking characters multiple times, a sliding "window" is used while checking against subStr
     while (posStr < strLen) {
         if (str.at(posStr) == subStr.at(posSubStr)) {
             // Current character matches, move onto the next
@@ -125,7 +126,7 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
         } else {
             // Current character doesn't match, reset position in subStr based on partial match table
             posSubStr = matchTable.at(posSubStr);
-            // Conditionally move onto the next character in str
+            // If the current table value is -1 or 0, then we need to start matching from the beginning of subStr
             if (posSubStr < 0) {
                 ++posStr;
                 ++posSubStr;
