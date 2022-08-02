@@ -11,7 +11,8 @@
 #include <unordered_set>
 #include <vector>
 
-std::string VecToString(const std::vector<int>& vec)
+template <typename T>
+std::string VecToString(const std::vector<T>& vec)
 {
     std::string result = "{";
 
@@ -27,7 +28,8 @@ std::string VecToString(const std::vector<int>& vec)
     return result;
 }
 
-std::string LstToString(const std::list<size_t>& lst)
+template <typename T>
+std::string LstToString(const std::list<T>& lst)
 {
     std::string result = "{";
 
