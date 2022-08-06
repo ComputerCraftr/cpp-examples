@@ -65,8 +65,8 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
     std::list<size_t> matchingIndices;
 
     // Can only work with string lengths up to the maximum int64_t value
-    const int64_t strLen = std::min<uint64_t>(str.length(), std::numeric_limits<int64_t>::max());
-    const int64_t subStrLen = std::min<uint64_t>(subStr.length(), std::numeric_limits<int64_t>::max());
+    const int64_t strLen = std::min(static_cast<uint64_t>(str.length()), static_cast<uint64_t>(std::numeric_limits<int64_t>::max()));
+    const int64_t subStrLen = std::min(static_cast<uint64_t>(subStr.length()), static_cast<uint64_t>(std::numeric_limits<int64_t>::max()));
 
     // If either string is empty or subStr is longer than str, then there will be no matches
     if (strLen == 0 || subStrLen == 0 || subStrLen > strLen) {
