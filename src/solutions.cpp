@@ -136,3 +136,9 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
 
     return matchingIndices;
 }
+
+// Given an array of integer numbers, arrange the elements of the array in a way that forms the highest possible number. For example, given [10, 7, 76, 415], you should return 77641510.
+uint64_t LargestIntFromArrangement(const std::vector<uint32_t>& intVec)
+{
+    return 0;
+}
