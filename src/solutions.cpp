@@ -52,6 +52,22 @@ int FirstValueEqualToIndex(const std::vector<int>& intVec)
     }
 }
 
+std::string VecToString(const std::vector<int64_t>& vec)
+{
+    std::string result = "{";
+
+    if (!vec.empty()) {
+        const size_t end = vec.size() - 1;
+        for (size_t i = 0; i != end; ++i) {
+            result += std::to_string(vec.at(i)) + ", ";
+        }
+        result += std::to_string(vec.at(end));
+    }
+
+    result += "}";
+    return result;
+}
+
 // Given an input text string and a simple text pattern, find the starting indices of all matches of the pattern in the input text string.
 //
 // This function uses the KMP algorithm to find all matches for a substring in a given string. Before scanning the string for
@@ -108,10 +124,13 @@ std::list<size_t> FindSubStrMatches(const std::string& str, const std::string& s
 
         // The last element is never -1
         matchTable.push_back(posSubStrNext);
+        printf("matchTable.size() = %lu\n", matchTable.size());
+        printf("%s\n", VecToString(matchTable).c_str());
     }
 
     // Search str for matches - instead of rechecking characters multiple times, a sliding "window" is used while checking against subStr
     while (posStr < strLen) {
+        printf("posStr = %li, str.at(posStr) = %c, subStr.at(posSubStr) = %c\n", posStr, str.at(posStr), subStr.at(posSubStr));
         if (str.at(posStr) == subStr.at(posSubStr)) {
             // Current character matches, move onto the next
             ++posStr;

@@ -12,7 +12,7 @@
 #include <vector>
 
 template <typename T>
-std::string VecToString(const std::vector<T>& vec)
+static std::string VecToString(const std::vector<T>& vec)
 {
     std::string result = "{";
 
@@ -29,7 +29,7 @@ std::string VecToString(const std::vector<T>& vec)
 }
 
 template <typename T>
-std::string LstToString(const std::list<T>& lst)
+static std::string LstToString(const std::list<T>& lst)
 {
     std::string result = "{";
 
@@ -98,8 +98,16 @@ int main(int argc, char *argv[])
         printf("FirstValueEqualToIndex %s = %i\n", VecToString(testVecArr[i]).c_str(), FirstValueEqualToIndex(testVecArr[i]));
     }
 
-    const std::string testStr = "abracadabra";
-    const std::string subStr = "abr";
+    //const std::string testStr = "aaaabaaasaabaaaabaabasaa";
+    //const std::string subStr = "abaa";
+    //const std::string testStr = "PARTICIPATE IN PARTICIPATE PARTICIPATE PARTICIPATE IN PARACHUTE PARACHUTE PARACHUTEPARTICIPATE IN PARACHUTEPARTICIPATE IN PARACHUTE PARACHUTE PARACHUTE";
+    //const std::string subStr = "PARTICIPATE IN PARACHUTE";
+    //const std::string testStr = "AABAACAADAABAABA";
+    //const std::string subStr = "AABA";
+    //const std::string testStr = "abracadabra";
+    //const std::string subStr = "abr";
+    const std::string testStr = "mmommommy";
+    const std::string subStr = "mommy";
 
     const std::list<size_t> matches = FindSubStrMatches(testStr, subStr);
     printf("Found substring match at positions = %s\n", LstToString(matches).c_str());
